@@ -8,7 +8,7 @@ import time
 
 # import ur5_driver.robotiq_gripper as robotiq_gripper
 import robotiq_gripper
-from urx_packages.urx import Robot
+from UR_12idb.robUR3 import UR3
 from copy import deepcopy
 from ur_dashboard import UR_DASHBOARD
 
@@ -25,7 +25,7 @@ class UR5(UR_DASHBOARD):
         i = 1
         while True:
             try:
-                self.ur5 = Robot(self.IP)
+                self.ur5 = UR3(name = self.IP)
                 time.sleep(0.2)
                 print('Successful ur5 connection on attempt #{}'.format(i))
                 break
@@ -60,6 +60,9 @@ class UR5(UR_DASHBOARD):
 
         print('Opening gripper...')
         self.gripper.move_and_wait_for_pos(self.griper_open, self.gripper_speed, self.gripper_force)
+
+        # print('Opening camera...')
+        # self.camera = camera.camera(device=0)
 
 
     def pick(self, pick_goal):
