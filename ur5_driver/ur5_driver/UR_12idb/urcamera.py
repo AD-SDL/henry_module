@@ -314,8 +314,8 @@ class camera(object):
         dir = [0, 0]
         Ry1 = (self.QRedgelength[xmaxind] - self.QRedgelength[xminind])/self.QRedgelength[xmaxind]
         Ry2 = (self.QRedgelength[xminind] - self.QRedgelength[xmaxind])/self.QRedgelength[xminind]
-        print("Ry1:" + Ry1)
-        print("Ry2:" + Ry2)
+        # print("Ry1:" + str(Ry1))
+        # print("Ry2:" + str(Ry2))
         if Ry1>0.015:
             print("Direction [0, 1] and negative angle")
             dirv = [0, -1]
@@ -339,7 +339,79 @@ class camera(object):
         return dir
 #        print(cntpos)
 #        print(self.QRedgelength)
-        
+    
+    def get_tilt_QR(self):
+        # analysize tilt angle from a QR code.
+        # it returns direction to rotate with .tilt_over function.
+        print("get tilt")
+        if len(self.QRcoordinates) < 4:
+            print("return here")
+            return 0, 0
+        cntpos = []
+        for k in range(4):
+            ind1 = k%4
+            ind2 = (k+1)%4
+            x0 = self.QRcoordinates[ind1][0]
+            y0 = self.QRcoordinates[ind1][1]
+            x1 = self.QRcoordinates[ind2][0]
+            y1 = self.QRcoordinates[ind2][1]
+            pos = [(x0+x1)/2, (y0+y1)/2]
+            cntpos.append(pos)
+        xmaxind = 0
+        xminind = 0
+        ymaxind = 0
+        yminind = 0
+        for k in range(4):
+            x = cntpos[k][0]
+            y = cntpos[k][1]
+            if x>cntpos[xmaxind][0]:
+                xmaxind = k
+            if x<cntpos[xminind][0]:
+                xminind = k
+            if y>cntpos[ymaxind][1]:
+                ymaxind = k
+            if y<cntpos[yminind][1]:
+                yminind = k
+#        print(self.QRedgelength[xmaxind], 'xmax')
+#        print(self.QRedgelength[xminind], 'xmin')
+#        print(self.QRedgelength[ymaxind], 'ymax')
+#        print(self.QRedgelength[yminind], 'ymin')
+        dir = [0, 0]
+        Ry1 = (self.QRedgelength[xmaxind] - self.QRedgelength[xminind])/self.QRedgelength[xmaxind]
+        Ry2 = (self.QRedgelength[xminind] - self.QRedgelength[xmaxind])/self.QRedgelength[xminind]
+        Ry = 0
+        # print("Ry1:" + str(Ry1))
+        # print("Ry2:" + str(Ry2))
+        if Ry1>0.015:
+            print("Direction [0, 1] and negative angle")
+            dirv = [0, -1]
+            for i in range(2):
+                dir[i] = dir[i]+dirv[i]
+            Ry = -Ry1
+        if Ry2>0.015:
+            print("Direction [0, 1] and positive angle")
+            dirv = [0, 1]
+            for i in range(2):
+                dir[i] = dir[i]+dirv[i]
+            Ry = Ry2
+
+        Rx1 = (self.QRedgelength[ymaxind] - self.QRedgelength[yminind])/self.QRedgelength[ymaxind]
+        Rx2 = (self.QRedgelength[yminind]-self.QRedgelength[ymaxind])/self.QRedgelength[ymaxind]
+        Rx = 0
+        if Rx1 >0.015:
+            print("Direction [1, 0] and positive angle")
+            dirv = [1, 0]
+            for i in range(2):
+                dir[i] = dir[i]+dirv[i]
+            Rx = Rx1
+        if Rx2 >0.015:
+            print("Direction [1, 0] and negative angle")
+            dirv = [-1, 0]
+            for i in range(2):
+                dir[i] = dir[i]+dirv[i]
+            Rx = Rx2
+        return Rx, Ry
+
     def addtext(self):
         opencvimage = np.array(self.image)
         imageData = opencvimage[:,:,::-1].copy()

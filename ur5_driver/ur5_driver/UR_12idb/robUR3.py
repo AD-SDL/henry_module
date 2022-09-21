@@ -939,3 +939,20 @@ class UR3(QObject):
         self.robot.set_tcp(self.camtcp)
         self.robot.set_pos(pos, acc=0.1, vel=0.1)
         self.robot.set_tcp(self.tcp)
+
+    def align_ry(self, acceleration, velocity):
+        self.camera.capture()
+        self.camera.decode()
+        Rx, Ry = self.camera.get_tilt_QR()
+        # print("dRy:" + str(Ry))
+        
+        k = 0.5
+
+        pos = self.robot.getl()
+        # print("Ry:" + str(pos[4]))
+
+        pos[3] = pos[3] + k * Ry
+        pos[4] = pos[4] + k * Ry
+        self.robot.movel(pos, acceleration, velocity)
+        print("moved: (" + str(k * Rx) + ", " + str(k * Ry) + ")")
+
