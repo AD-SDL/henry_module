@@ -3,7 +3,7 @@ import sys
 # https://github.com/Byeongdulee/python-urx
 sys.path.append(r"python-urx")
 sys.path.append(r"../python-urx")
-from urx_packages.urx import robot, urscript, urrobot, robotiq_two_finger_gripper
+from urx import robot, urscript, urrobot, robotiq_two_finger_gripper
 import urrtde
 import math3d as m3d
 import logging

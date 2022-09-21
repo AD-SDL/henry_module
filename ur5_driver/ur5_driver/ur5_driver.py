@@ -8,7 +8,8 @@ import time
 
 # import ur5_driver.robotiq_gripper as robotiq_gripper
 import robotiq_gripper
-from UR_12idb.robUR3 import UR3
+# from UR_12idb.robUR3 import UR3
+from urx import Robot
 from copy import deepcopy
 from ur_dashboard import UR_DASHBOARD
 
@@ -19,13 +20,14 @@ class UR5(UR_DASHBOARD):
 
         super().__init__(IP=IP, PORT=PORT)
 
-        self.initialize() # Initilialize the robot
+        # self.initialize() # Initilialize the robot
 
         # ur5 SETUP:
         i = 1
         while True:
             try:
-                self.ur5 = UR3(name = self.IP)
+                # self.ur5 = UR3(name = self.IP)
+                self.ur5 = Robot(self.IP)
                 time.sleep(0.2)
                 print('Successful ur5 connection on attempt #{}'.format(i))
                 break
@@ -131,7 +133,7 @@ if __name__ == "__main__":
     pos1= [-0.22575, -0.65792, 0.39271, 2.216, 2.196, -0.043]
     pos2= [0.22575, -0.65792, 0.39271, 2.216, 2.196, -0.043]
     robot = UR5()
-    # robot.transfer(pos1,pos2)
-    # robot.transfer(pos2,pos1)
+    robot.transfer(pos1,pos2)
+    robot.transfer(pos2,pos1)
     robot.ur5.close()
     print('end')

@@ -4,14 +4,13 @@ import time
 i = 1
 while True:
     try:
-        rob = robUR3.UR3(name = '192.168.50.82', device = 2)
+        rob = robUR3.UR3(name = '', device = 0)
         time.sleep(0.2)
         print('Successful ur5 connection on attempt #{}'.format(i))
         break
     except:
         print('Failed attempt #{}'.format(i))
         i+=1
-        time.sleep(2)
 
 rob.camera.focus(450)
 

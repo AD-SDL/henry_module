@@ -312,12 +312,16 @@ class camera(object):
 #        print(self.QRedgelength[ymaxind], 'ymax')
 #        print(self.QRedgelength[yminind], 'ymin')
         dir = [0, 0]
-        if (self.QRedgelength[xmaxind] - self.QRedgelength[xminind])/self.QRedgelength[xmaxind]>0.015:
+        Ry1 = (self.QRedgelength[xmaxind] - self.QRedgelength[xminind])/self.QRedgelength[xmaxind]
+        Ry2 = (self.QRedgelength[xminind] - self.QRedgelength[xmaxind])/self.QRedgelength[xminind]
+        print("Ry1:" + Ry1)
+        print("Ry2:" + Ry2)
+        if Ry1>0.015:
             print("Direction [0, 1] and negative angle")
             dirv = [0, -1]
             for i in range(2):
                 dir[i] = dir[i]+dirv[i]
-        if (self.QRedgelength[xminind]-self.QRedgelength[xmaxind])/self.QRedgelength[xminind]>0.015:
+        if Ry2>0.015:
             print("Direction [0, 1] and positive angle")
             dirv = [0, 1]
             for i in range(2):

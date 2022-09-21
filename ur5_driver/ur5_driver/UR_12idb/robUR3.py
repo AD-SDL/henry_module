@@ -73,13 +73,12 @@ class UR3(QObject):
 # X : negative - In board
 # Y : positive - Along X-ray
 # Y : negative - Again X-ray
-        if '.' in name:
-            IP = name
+        if name == 'UR3':
+            IP="164.54.122.96"
+        elif name == 'UR5':
+            IP = 'UR5-12IDC.xray.aps.anl.gov'
         else:
-            if name == 'UR3':
-                IP="164.54.122.96"
-            if name == 'UR5':
-                IP = 'UR5-12IDC.xray.aps.anl.gov'
+            IP = name
         self.logger = logging.getLogger(name)
         try:
 #            self.robot = urx.Robot(IP)
