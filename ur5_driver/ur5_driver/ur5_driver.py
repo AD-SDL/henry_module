@@ -24,7 +24,7 @@ class UR5(UR_DASHBOARD):
         super().__init__(IP=IP, PORT=PORT)
 
 
-        self.initialize() # Initilialize the robot
+        # self.initialize() # Initilialize the robot
 
 
         # UR5 SETUP:
@@ -44,8 +44,9 @@ class UR5(UR_DASHBOARD):
         self.velocity = 0.2
 
         # Joint position of arm's home position
-        self.home = [-5.432596866284506, -1.7744094334044398, 2.659326140080587, -0.8687126797488709, 0.8495127558708191, -0.0038750807391565445]
-
+        self.home_back = [-5.423735324536459, -1.7657300434508265, 2.6696303526507776, -0.908503608112671, 0.8667137622833252, 0.0054948958568274975]
+        self.home_left = [-4.814536158238546, -1.4853655856898804, 2.1723483244525355, -0.7514525812915345, 2.992141008377075, -0.0323408285724085]
+        self.home_right = [-5.429234568272726, -1.394191862349846, 2.1012232939349573, -0.7222079199603577, -0.7285550276385706, 0.0160035602748394]
 
         # GRIPPER SETUP:
         print('Creating gripper...')
@@ -74,17 +75,32 @@ class UR5(UR_DASHBOARD):
 
         '''Pick up from first goal position'''
 
-        above_goal = deepcopy(pick_goal)
+        direction = pick_goal[0]
+        goal = pick_goal[1]
+
+        # Change arm to face the correct directly (front, back, left, or right)
+        if direction == 'back':
+            home = self.home_back
+        elif direction == 'left':
+            home = self.home_left
+        elif direction == 'right':
+            home = self.home_right
+        else:
+            print('Orientation does not exist')
+            return
+
+        # Calculate position above goal
+        above_goal = deepcopy(goal)
         above_goal[2] += 0.05
 
         print('Moving to home position')
-        self.ur5.robot.movej(self.home, self.acceleration, self.velocity)
+        self.ur5.robot.movej(home, self.acceleration, self.velocity)
 
         print('Moving to above goal position')
         self.ur5.robot.movel(above_goal, self.acceleration, self.velocity)
 
         print('Moving to goal position')
-        self.ur5.robot.movel(pick_goal, self.acceleration, self.velocity)
+        self.ur5.robot.movel(goal, self.acceleration, self.velocity)
 
         print('Closing gripper')
         self.gripper.move_and_wait_for_pos(self.gripper_close, self.gripper_speed, self.gripper_force)
@@ -93,7 +109,7 @@ class UR5(UR_DASHBOARD):
         self.ur5.robot.movel(above_goal, self.acceleration, self.velocity)
 
         print('Moving to home position')
-        self.ur5.robot.movej(self.home, self.acceleration, self.velocity)
+        self.ur5.robot.movej(home, self.acceleration, self.velocity)
 
     
 
@@ -101,17 +117,32 @@ class UR5(UR_DASHBOARD):
 
         '''Place down at second goal position'''
 
-        above_goal = deepcopy(place_goal)
+        direction = place_goal[0]
+        goal = place_goal[1]
+
+        # Change arm to face the correct directly (front, back, left, or right)
+        if direction == 'back':
+            home = self.home_back
+        elif direction == 'left':
+            home = self.home_left
+        elif direction == 'right':
+            home = self.home_right
+        else:
+            print('Orientation does not exist')
+            return
+
+        # Calculate position above goal
+        above_goal = deepcopy(goal)
         above_goal[2] += 0.05
 
         print('Moving to home position')
-        self.ur5.robot.movej(self.home, self.acceleration, self.velocity)
+        self.ur5.robot.movej(home, self.acceleration, self.velocity)
 
         print('Moving to above goal position')
         self.ur5.robot.movel(above_goal, self.acceleration, self.velocity)
 
         print('Moving to goal position')
-        self.ur5.robot.movel(place_goal, self.acceleration, self.velocity)
+        self.ur5.robot.movel(goal, self.acceleration, self.velocity)
 
         print('Opennig gripper')
         self.gripper.move_and_wait_for_pos(self.griper_open, self.gripper_speed, self.gripper_force)
@@ -120,7 +151,11 @@ class UR5(UR_DASHBOARD):
         self.ur5.robot.movel(above_goal, self.acceleration, self.velocity)
 
         print('Moving to home position')
-        self.ur5.robot.movej(self.home, self.acceleration, self.velocity)
+        self.ur5.robot.movej(home, self.acceleration, self.velocity)
+
+        if direction != 'back':
+            print('Moving to BACK home position')
+            self.ur5.robot.movej(self.home_back, self.acceleration, self.velocity)
 
 
     def transfer(self, pos1, pos2):
@@ -137,15 +172,22 @@ class UR5(UR_DASHBOARD):
 
 if __name__ == "__main__":
 
-    pos1= [ 0.19699137, -0.65753703, 0.17121313, 1.58650296, 0.00313809, 0.00971325]
-    pos2= [-0.20288636, -0.65752902, 0.17121757, 1.58646952, 0.00336391, 0.0097106 ]
+    pos_front1 = ['back', [ 0.19699137, -0.65753703, 0.17121313, 1.58650296, 0.00313809, 0.00971325]]
+    pos_front2 = ['back', [-0.20288636, -0.65752902, 0.17121757, 1.58646952, 0.00336391, 0.0097106 ]]
+    pos_right1 = ['right', [0.60434288, -0.27237252, 0.20709442, 1.04564069, 1.28511247, 1.23740526]]
     robot = UR5()
+
+    # print('Moving to home position')
+    # robot.ur5.robot.movej(robot.home_back, robot.acceleration, robot.velocity)
+
+    # # home_pos = [-0.00311171, -0.45754092,  0.17114409,  1.57079632,  0.0,  0.0]
+    # robot.ur5.robot.movel(pos_front1[1], robot.acceleration, robot.velocity)
 
     # print(robot.ur5.getj())
     # print(robot.ur5.get_xyz())
 
-    robot.transfer(pos1,pos2)
-    robot.transfer(pos2,pos1)
+    robot.transfer(pos_front1,pos_right1)
+    robot.transfer(pos_front2,pos_right1)
 
     # print(robot.ur5.camera.capture())
     # robot.ur5.camera.save()
