@@ -136,6 +136,9 @@ class UR_DASHBOARD():
     def set_operational_mode(self, mode):
         return self.send_command('set operational mode ' + mode)
 
+    def clear_operational_mode(self):
+        return self.send_command('clear operational mode')
+
     def popup(self):
         return self.send_command('popup <popup-text>')
 
@@ -147,10 +150,11 @@ if __name__ == "__main__":
     # robot.robot_mode()
     # robot.close_popup()
     # robot.initialize()
-    robot.send_command('clear operational mode')
+    # robot.send_command('clear operational mode')
     # robot.power_on()
     # robot.brake_release()
     # robot.power_off()
     # robot.brake_release()
     # robot.safety_status()
     # robot.quit()
+    robot.clear_operational_mode()

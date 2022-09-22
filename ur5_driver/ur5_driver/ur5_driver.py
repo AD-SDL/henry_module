@@ -135,6 +135,10 @@ class UR5(UR_DASHBOARD):
         print('Finished transfer')
 
 
+    def close(self):
+        self.clear_operational_mode()
+        self.ur5.close()
+
 
 if __name__ == "__main__":
 
@@ -147,5 +151,5 @@ if __name__ == "__main__":
     
     # robot.ur5.movel(robot.home, robot.acceleration, robot.velocity)
 
-    robot.ur5.close()
+    robot.close()
     print('end')
