@@ -6,7 +6,7 @@ import time
 import numpy as np
 #from imutils import paths
 import cv2
-from urcamera import decodeQR, showQRcode
+from .urcamera import decodeQR, showQRcode
 from threading import Thread
 
 pos_sam = [-4.60838969e-01, -5.05650395e-01,  2.31693123e-01,  2.28368253e+00,

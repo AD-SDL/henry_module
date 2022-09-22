@@ -8,25 +8,30 @@ import time
 
 # import ur5_driver.robotiq_gripper as robotiq_gripper
 import robotiq_gripper
-# from UR_12idb.robUR3 import UR3
+from UR_12idb.robUR3 import UR3
 from urx import Robot
 from copy import deepcopy
 from ur_dashboard import UR_DASHBOARD
+from UR_12idb.urcamera import camera
 
 class UR5(UR_DASHBOARD):
     
+    '''camera_index: need to specify camera when using camera directly plugged into computer.
+    0 is default, 2 is the next camera'''
 
-    def __init__(self, IP:str = "192.168.50.82", PORT: int = 29999):
+    def __init__(self, IP:str = "192.168.50.82", PORT: int = 29999, camera_index = 0):
 
         super().__init__(IP=IP, PORT=PORT)
 
+
         # self.initialize() # Initilialize the robot
 
-        # ur5 SETUP:
+
+        # UR5 SETUP:
         i = 1
         while True:
             try:
-                # self.ur5 = UR3(name = self.IP)
+                # self.ur5 = UR3(name = self.IP, device = camera_index)     # Using UR3 with movel() results in protective stop
                 self.ur5 = Robot(self.IP)
                 time.sleep(0.2)
                 print('Successful ur5 connection on attempt #{}'.format(i))
@@ -35,10 +40,16 @@ class UR5(UR_DASHBOARD):
                 print('Failed attempt #{}'.format(i))
                 i+=1
 
+        # Variables to control the arm's speed
         self.acceleration = 1.0
         self.velocity = 0.2
 
-        self.home = (0.0, -0.200, 0.59262, 2.247, 2.196, 0.0)
+        # Joint position of arm's home position
+        self.home = (0.8419385552406311, -2.293344636956686, 1.723344628010885, -0.9996248048594971, 4.718705177307129, 0.8619277477264404)
+
+        # CAMERA SETUP:
+        print('Connecting to camera...')
+        self.camera = camera(IP=IP, device = camera_index)
 
 
         # GRIPPER SETUP:
@@ -53,8 +64,8 @@ class UR5(UR_DASHBOARD):
         else:
             print('Activating gripper...')
             self.gripper.activate()
-        
 
+        # Variables to control gripper
         self.gripper_close = 110 # 0-255 (255 is closed)
         self.griper_open = 0
         self.gripper_speed = 150 # 0-255
@@ -62,9 +73,6 @@ class UR5(UR_DASHBOARD):
 
         print('Opening gripper...')
         self.gripper.move_and_wait_for_pos(self.griper_open, self.gripper_speed, self.gripper_force)
-
-        # print('Opening camera...')
-        # self.camera = camera.camera(device=0)
 
 
     def pick(self, pick_goal):
@@ -75,7 +83,7 @@ class UR5(UR_DASHBOARD):
         above_goal[2] += 0.20
 
         print('Moving to home position')
-        self.ur5.movel(self.home, self.acceleration, self.velocity)
+        self.ur5.movej(self.home, self.acceleration, self.velocity)
 
         print('Moving to above goal position')
         self.ur5.movel(above_goal, self.acceleration, self.velocity)
@@ -90,7 +98,7 @@ class UR5(UR_DASHBOARD):
         self.ur5.movel(above_goal, self.acceleration, self.velocity)
 
         print('Moving to home position')
-        self.ur5.movel(self.home, self.acceleration, self.velocity)
+        self.ur5.movej(self.home, self.acceleration, self.velocity)
 
     
 
@@ -102,7 +110,7 @@ class UR5(UR_DASHBOARD):
         above_goal[2] += 0.20
 
         print('Moving to home position')
-        self.ur5.movel(self.home, self.acceleration, self.velocity)
+        self.ur5.movej(self.home, self.acceleration, self.velocity)
 
         print('Moving to above goal position')
         self.ur5.movel(above_goal, self.acceleration, self.velocity)
@@ -117,7 +125,7 @@ class UR5(UR_DASHBOARD):
         self.ur5.movel(above_goal, self.acceleration, self.velocity)
 
         print('Moving to home position')
-        self.ur5.movel(self.home, self.acceleration, self.velocity)
+        self.ur5.movej(self.home, self.acceleration, self.velocity)
 
 
     def transfer(self, pos1, pos2):
@@ -133,7 +141,11 @@ if __name__ == "__main__":
     pos1= [-0.22575, -0.65792, 0.39271, 2.216, 2.196, -0.043]
     pos2= [0.22575, -0.65792, 0.39271, 2.216, 2.196, -0.043]
     robot = UR5()
+    # print(robot.ur5.getj())
     robot.transfer(pos1,pos2)
     robot.transfer(pos2,pos1)
+    
+    # robot.ur5.movel(robot.home, robot.acceleration, robot.velocity)
+
     robot.ur5.close()
     print('end')

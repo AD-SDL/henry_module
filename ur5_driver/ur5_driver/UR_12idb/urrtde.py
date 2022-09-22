@@ -4,8 +4,8 @@ import sys
 import threading
 sys.path.append('..')
 sys.path.append('ur-rtde')
-import rtde.rtde as rtde
-import rtde.rtde_config as rtde_config
+from .rtde import rtde as rtde
+from .rtde import rtde_config as rtde_config
 import os
 defaultport = 30004
 #parameters

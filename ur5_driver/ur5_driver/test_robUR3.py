@@ -1,11 +1,11 @@
-import robUR3
+from UR_12idb.robUR3 import UR3
 import time
 from copy import deepcopy
 
 i = 1
 while True:
     try:
-        rob = robUR3.UR3(name = '192.168.50.82', device = 0)
+        rob = UR3(name = '192.168.50.82', device = 0)
         time.sleep(0.2)
         print('Successful ur5 connection on attempt #{}'.format(i))
         break

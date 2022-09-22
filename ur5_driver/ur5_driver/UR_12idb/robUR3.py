@@ -15,12 +15,12 @@ import numpy as np
 import logging
 import math
 import time
-from robot import Robotiq_Two_Finger_Gripper
-from robot import Robot
-from urdashboard import dashboard
-from urcamera import camera
-import camera_tools as ctool
-import robot
+from .robot import Robotiq_Two_Finger_Gripper
+from .robot import Robot
+from .urdashboard import dashboard
+from .urcamera import camera
+from . import camera_tools as ctool
+from . import robot
 import cv2
 #from urrobot import URRobot
 
