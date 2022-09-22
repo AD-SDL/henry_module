@@ -2,6 +2,9 @@ import socket
 from time import sleep
 
 class UR_DASHBOARD():
+    '''sends commands to UR5
+    list of possible commands can be found here:
+    https://s3-eu-west-1.amazonaws.com/ur-support-site/42728/DashboardServer_e-Series.pdf'''
     def __init__(self, IP:str = "192.168.50.82", PORT: int = 29999):
 
         self.IP = IP

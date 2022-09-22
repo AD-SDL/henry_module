@@ -1,6 +1,9 @@
-import urcamera
+from UR_12idb import urcamera
 import time
 import cv2
+
+# This tests shows the camera if directly plugged into the computer
+# You cannot change focus if getting image from the camera server
 
 camera = urcamera.camera(device=0)
 
