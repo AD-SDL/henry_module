@@ -8,7 +8,7 @@ import time
 
 # import ur5_driver.robotiq_gripper as robotiq_gripper
 import robotiq_gripper
-from UR_12idb.robUR3 import UR3
+# from UR_12idb.robUR3 import UR3
 from urx import Robot
 from copy import deepcopy
 from ur_dashboard import UR_DASHBOARD
@@ -31,8 +31,7 @@ class UR5(UR_DASHBOARD):
         i = 1
         while True:
             try:
-                self.ur5 = UR3(name = self.IP, device = camera_index)     # Using UR3 with movel() results in protective stop
-                # self.ur5 = Robot(self.IP)
+                self.ur5 = Robot(self.IP)
                 time.sleep(0.2)
                 print('Successful ur5 connection on attempt #{}'.format(i))
                 break
@@ -48,8 +47,8 @@ class UR5(UR_DASHBOARD):
         self.home = (0.8419385552406311, -2.293344636956686, 1.723344628010885, -0.9996248048594971, 4.718705177307129, 0.8619277477264404)
 
         # CAMERA SETUP:
-        # print('Connecting to camera...')
-        # self.camera = camera(IP=IP, device = camera_index)
+        print('Connecting to camera...')
+        self.camera = camera(IP=IP, device = camera_index)
 
 
         # GRIPPER SETUP:
@@ -83,22 +82,22 @@ class UR5(UR_DASHBOARD):
         above_goal[2] += 0.20
 
         print('Moving to home position')
-        self.ur5.robot.movej(self.home, self.acceleration, self.velocity)
+        self.ur5.movej(self.home, self.acceleration, self.velocity)
 
         print('Moving to above goal position')
-        self.ur5.robot.movel(above_goal, self.acceleration, self.velocity)
+        self.ur5.movel(above_goal, self.acceleration, self.velocity)
 
         print('Moving to goal position')
-        self.ur5.robot.movel(pick_goal, self.acceleration, self.velocity)
+        self.ur5.movel(pick_goal, self.acceleration, self.velocity)
 
         print('Closing gripper')
         self.gripper.move_and_wait_for_pos(self.gripper_close, self.gripper_speed, self.gripper_force)
 
         print('Moving back to above goal position')
-        self.ur5.robot.movel(above_goal, self.acceleration, self.velocity)
+        self.ur5.movel(above_goal, self.acceleration, self.velocity)
 
         print('Moving to home position')
-        self.ur5.robot.movej(self.home, self.acceleration, self.velocity)
+        self.ur5.movej(self.home, self.acceleration, self.velocity)
 
     
 
@@ -110,22 +109,22 @@ class UR5(UR_DASHBOARD):
         above_goal[2] += 0.20
 
         print('Moving to home position')
-        self.ur5.robot.movej(self.home, self.acceleration, self.velocity)
+        self.ur5.movej(self.home, self.acceleration, self.velocity)
 
         print('Moving to above goal position')
-        self.ur5.robot.movel(above_goal, self.acceleration, self.velocity)
+        self.ur5.movel(above_goal, self.acceleration, self.velocity)
 
         print('Moving to goal position')
-        self.ur5.robot.movel(place_goal, self.acceleration, self.velocity)
+        self.ur5.movel(place_goal, self.acceleration, self.velocity)
 
         print('Opennig gripper')
         self.gripper.move_and_wait_for_pos(self.griper_open, self.gripper_speed, self.gripper_force)
 
         print('Moving back to above goal position')
-        self.ur5.robot.movel(above_goal, self.acceleration, self.velocity)
+        self.ur5.movel(above_goal, self.acceleration, self.velocity)
 
         print('Moving to home position')
-        self.ur5.robot.movej(self.home, self.acceleration, self.velocity)
+        self.ur5.movej(self.home, self.acceleration, self.velocity)
 
 
     def transfer(self, pos1, pos2):
@@ -137,21 +136,21 @@ class UR5(UR_DASHBOARD):
 
     def close(self):
         self.clear_operational_mode()
-        self.ur5.robot.close()
+        self.ur5.close()
 
 
 if __name__ == "__main__":
-
+    # Cartesian positions:
     pos1= [-0.22575, -0.65792, 0.39271, 2.216, 2.196, -0.043]
     pos2= [0.22575, -0.65792, 0.39271, 2.216, 2.196, -0.043]
+    
     robot = UR5()
-    # print(robot.ur5.getj())
-    # robot.transfer(pos1,pos2)
-    # robot.transfer(pos2,pos1)
+    robot.transfer(pos1,pos2)
+    robot.transfer(pos2,pos1)
+
+    # Captures image and save to file:
     # print(robot.camera.capture())
     # robot.camera.save()
-    # robot.ur5.robot.movel(robot.home, robot.acceleration, robot.velocity)
-    robot.ur5.bring_QR_to_camera_center(referenceName='QR')
 
     robot.close()
     print('end')
