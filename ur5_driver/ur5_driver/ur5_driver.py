@@ -6,13 +6,12 @@ from multiprocessing.connection import wait
 
 import time
 
-# import ur5_driver.robotiq_gripper as robotiq_gripper
 import robotiq_gripper
 from UR_12idb.robUR3 import UR3
-from urx import Robot
+# from urx import Robot
 from copy import deepcopy
 from ur_dashboard import UR_DASHBOARD
-from UR_12idb.urcamera import camera
+# from UR_12idb.urcamera import camera
 
 class UR5(UR_DASHBOARD):
     
@@ -24,7 +23,7 @@ class UR5(UR_DASHBOARD):
         super().__init__(IP=IP, PORT=PORT)
 
 
-        # self.initialize() # Initilialize the robot
+        self.initialize() # Initilialize the robot
 
 
         # UR5 SETUP:
@@ -174,25 +173,27 @@ if __name__ == "__main__":
 
     pos_front1 = ['back', [ 0.19699137, -0.65753703, 0.17121313, 1.58650296, 0.00313809, 0.00971325]]
     pos_front2 = ['back', [-0.20288636, -0.65752902, 0.17121757, 1.58646952, 0.00336391, 0.0097106 ]]
+
     pos_right1 = ['right', [0.60434288, -0.27237252, 0.20709442, 1.04564069, 1.28511247, 1.23740526]]
+
+    pos_left1 = ['left', [-0.47370519, -0.26544203, 0.21667274, 1.19952641, -1.17216141, -1.16812065]]
+
+
     robot = UR5()
 
-    # print('Moving to home position')
-    # robot.ur5.robot.movej(robot.home_back, robot.acceleration, robot.velocity)
 
-    # # home_pos = [-0.00311171, -0.45754092,  0.17114409,  1.57079632,  0.0,  0.0]
-    # robot.ur5.robot.movel(pos_front1[1], robot.acceleration, robot.velocity)
+    # To get joint and cartesian position of arm:
+    print(robot.ur5.getj())
+    print(robot.ur5.get_xyz())
 
-    # print(robot.ur5.getj())
-    # print(robot.ur5.get_xyz())
+    robot.transfer(pos_front1,pos_left1)
 
-    robot.transfer(pos_front1,pos_right1)
-    robot.transfer(pos_front2,pos_right1)
-
+    # To capture camera frame and save to file:
     # print(robot.ur5.camera.capture())
     # robot.ur5.camera.save()
     
     # robot.ur5.robot.movel(robot.home, robot.acceleration, robot.velocity)
+    # To center camera onto a QR code:
     # robot.ur5.bring_QR_to_camera_center(referenceName='QR')
 
     robot.close()
