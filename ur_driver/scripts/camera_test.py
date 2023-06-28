@@ -33,6 +33,7 @@ else:
 # Start streaming
 pipeline.start(config)
 
+#declare a duration of time for streaming in seconds
 start_time = time.time()
 duration = 10
 
@@ -64,7 +65,7 @@ while True:# Wait for a coherent pair of frames: depth and color
     cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
     cv2.imshow('RealSense', images)
     cv2.waitKey(1)
-
+    # establishes a time frame for streaming, and ends after duration
     elapsed_time = time.time() - start_time
     if elapsed_time >= duration:
         break
