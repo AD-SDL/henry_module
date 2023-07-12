@@ -13,10 +13,12 @@ time.sleep(0.2)
 #robot.movel((0, 0, -0.05, 0, 0, 0), 0.05, 0.05, relative=True) 
 
 # # move above goal position
-robot.movel([-0.22575, -0.65792, 0.39771 + 0.20, 2.216, 2.196, -0.043], 0.01, 0.01)
+# robot.movel([-0.22575, -0.65792, 0.39771 + 0.20, 2.216, 2.196, -0.043], 0.01, 0.01)
 
 # move to goal position
 #robot.movel((-0.22575, -0.65792, 0.37771, 2.216, 2.196, -0.043), 0.05, 0.05)
 
 # # move back above goal position
 # robot.movel((-0.22575, -0.65792, 0.39771 + 0.20, 2.216, 2.196, -0.043), 0.01, 0.01)
+robot.getj()
+print(robot.getj())
