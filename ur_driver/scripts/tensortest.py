@@ -70,6 +70,10 @@ while True:
         distance = depth_value
         center_x = int((xmin + xmax) / 2)
         center_y = int((ymin + ymax) / 2) #calculate the center of the object
+
+        depth_intrin = depth_frame.profile.as_video_stream_profile().instrinsics
+        
+    
         offset_object_x = 320 - center_x
         offset_object_y = 240 - center_y
 
