@@ -7,8 +7,9 @@ from torchvision.transforms import functional as F
 from ultralytics import YOLO
 from urx import Robot
 from math import radians
-from urx.robotiq_two_finger_gripper import Robotiq_Two_Finger_Gripper
+from urx.robotiq_two_finger_gripper import Robotiq_Two_Finger_Gripperhgk
 
+get_joint_positions = 
 
 # UR robot configuration
 robot_ip = "192.168.1.102"
@@ -29,7 +30,6 @@ config.enable_stream(rs.stream.color, 640, 480, rs.format.rgb8, 30)  # Color str
 config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)  # Depth stream configuration
 profile = pipeline.start(config)
 
-robot.getj()
 desired_position = 
 # Start capturing and processing frames
 while True:
@@ -75,48 +75,36 @@ while True:
     
     
     # # ************************Modifications 7/13************************
-    # focal_length = 500
-    # principal_point = (320, 240)
+    def center_object_frame(offset_object_x, offset_object_y):
+    # Moves the robot arm to center the object in the frame
+        if offset_object_x > 0:
 
-    #    # Capture frame from the camera
-    # ret, frame = frame.read()
+            pos = offset_object_x 
+            while offset_object_x > 0:
+                pos -= .1
+                robot.movel(pos, 0, 0, 0, 0, 0, 0, 0)
 
-    # # Preprocess the frame (if necessary)
-    # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        if offset_object_x < 0:
+            pos = offset_object_x 
+            while offset_object_x < 0:
+                pos += .1
+                robot.movel(pos, 0, 0, 0, 0, 0, 0, 0) 
+        if offset_object_x > 0:
 
-    # # calculate the object's coordinates
-    # object_x = (offset_object_x - principal_point[0]) * distance / focal_length
-    # object_y = (offset_object_y - principal_point[1]) * distance / focal_length
-    # object_z = distance
+            p = offset_object_y 
+            while offset_object_y > 0:
+                p -= .1
+                robot.movel(p, 0, 0, 0, 0, 0, 0, 0)
 
-    # # Display the object's coordinates
-    # cv2.putText(frame, f"X: {object_x:.2f} m", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-    # cv2.putText(frame, f"Y: {object_y:.2f} m", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-    # cv2.putText(frame, f"Z: {object_z:.2f} m", (10, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        if offset_object_y < 0:
+            p = offset_object_y 
+            while offset_object_y < 0:
+                p += .1
+                robot.movel(0, p, 0, 0, 0, 0, 0, 0) 
+    center_object_frame()
 
-    # # Object coordinates in the camera's coordinate system
-    # object_camera = np.array([object_x, object_y, object_z])
-
-    # # Transformation matrix from camera to robot base coordinate system
-    # # we need to find the transformation matrix to convert from the camera coordinate system 
-    # # to the robot's base coordinate system.
-    # # Ignore the matrix values until we find the transformation matrix
-    # transformation_matrix = np.array([[r11, r12, r13, tx],
-    #                                 [r21, r22, r23, ty],
-    #                                 [r31, r32, r33, tz],
-    #                                 [0, 0, 0, 1]])
-
-    # # Gripper's offset from the robot's end effector
-    # gripper_offset = np.array([object_x, object_y, object_z])
-
-    # # Transform the object's coordinates to the gripper's coordinate system
-    # object_gripper = np.dot(transformation_matrix, np.append(object_camera, 1))
-    # object_gripper -= np.append(gripper_offset, 0)
-
-    # # Extract the adjusted coordinates
-    # object_x_gripper = object_gripper[0]
-    # object_y_gripper = object_gripper[1]
-    # object_z_gripper = object_gripper[2]
+    def calc_d2():
+        get_actual_tcp_pose()
     
     # # Move the the gripper above the object
     # robot.movel(object_x_gripper, object_y_gripper, object_z_gripper + .1, 0, 0, accel= 0.4, vel = 0.2 )
@@ -130,7 +118,7 @@ while True:
 
     # grip = Robotiq_Two_Finger_Gripper()
 
-    # robot.get_joint_position()
+    
     # if robot.get_joint_position()
     
 
